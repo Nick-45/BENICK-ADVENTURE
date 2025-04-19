@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benick Adventure - Crafting Extraordinary Journeys</title>
+    <style>
+        /* Embedded CSS Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #fff;
+            position: relative;
+        }
+
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .background-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.5);
+            transition: all 1.5s ease;
+        }
+
+        .main-content {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #FF9A3E, #FF3D77);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeIn 1.5s ease;
+            letter-spacing: 2px;
+            line-height: 1.2;
+        }
+
+        .tagline {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            margin-bottom: 3rem;
+            max-width: 800px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 2s ease;
+            font-weight: 300;
+            line-height: 1.4;
+            padding: 0 20px;
+        }
+
+        .btn-explore {
+            padding: 16px 45px;
+            font-size: 1.2rem;
+            background: linear-gradient(45deg, #FF7B54, #FF3D77);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 5px 25px rgba(255, 61, 119, 0.3);
+            animation: bounce 2s infinite;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 60px;
+        }
+
+        .btn-explore:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 61, 119, 0.4);
+        }
+
+        .btn-explore::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-explore:hover::before {
+            left: 100%;
+        }
+
+        .features-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .features {
+            display: flex;
+            gap: 40px;
+            animation: fadeIn 2.5s ease;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 20px 40px;
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.1);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.1rem;
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+            color: #FF7B54;
+        }
+
+        .feature-text {
+            font-weight: 300;
+        }
+
+        .scroll-down {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: bounce 2s infinite;
+            opacity: 0.7;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+
+        .scroll-down i {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 40px 10px;
+                margin-bottom: 20px;
+            }
+            
+            .features {
+                gap: 15px;
+                padding: 15px 25px;
+                width: 100%;
+                border-radius: 30px;
+            }
+            
+            .btn-explore {
+                padding: 14px 35px;
+                font-size: 1.1rem;
+                margin-bottom: 40px;
+            }
+            
+            .feature-item {
+                font-size: 1rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="background-container">
+        <img class="background-image" src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80" alt="Travel background">
+    </div>
+
+    <div class="main-content">
+        <section class="hero-section">
+            <h1 class="logo">BENICK ADVENTURE</h1>
+            <p class="tagline">Where extraordinary journeys begin. We craft personalized vacations, thrilling road trips, and unforgettable tours tailored just for you.</p>
+            <button class="btn-explore" id="exploreBtn">Begin Your Journey</button>
+            
+            <div class="scroll-down">
+                <i class="fas fa-chevron-down"></i>
+                <span>Discover more</span>
+            </div>
+        </section>
+
+        <div class="features-container">
+            <div class="features">
+                <div class="feature-item">
+                    <span class="feature-icon"><i class="fas fa-umbrella-beach"></i></span>
+                    <span class="feature-text">Luxury Vacations</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon"><i class="fas fa-route"></i></span>
+                    <span class="feature-text">Custom Road Trips</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon"><i class="fas fa-globe-americas"></i></span>
+                    <span class="feature-text">Global Adventures</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Embedded JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Button click handler
+            const exploreBtn = document.getElementById('exploreBtn');
+            exploreBtn.addEventListener('click', function() {
+                // In a real app, this would redirect to the main page
+                alert('Welcome to Benick Adventure! Your journey of a lifetime starts here. 🌎✈️');
+                // window.location.href = '/dashboard.html'; // Actual redirect
+            });
+
+            // Background image transition effect
+            const bgImages = [
+                'https://images.unsplash.com/photo-1506929562872-bb421503ef21?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80',
+                'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80',
+                'https://images.unsplash.com/photo-1470114716159-e389f8712fda?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80',
+                'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80',
+                'https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80'
+            ];
+            
+            const bgContainer = document.querySelector('.background-image');
+            let currentIndex = 0;
+            
+            setInterval(() => {
+                currentIndex = (currentIndex + 1) % bgImages.length;
+                bgContainer.style.opacity = 0;
+                
+                setTimeout(() => {
+                    bgContainer.src = bgImages[currentIndex];
+                    bgContainer.style.opacity = 1;
+                }, 1000);
+            }, 6000);
+
+            // Add scroll hint functionality
+            window.addEventListener('scroll', function() {
+                const scrollDown = document.querySelector('.scroll-down');
+                if (window.scrollY > 50) {
+                    scrollDown.style.opacity = '0';
+                    scrollDown.style.visibility = 'hidden';
+                } else {
+                    scrollDown.style.opacity = '0.7';
+                    scrollDown.style.visibility = 'visible';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
