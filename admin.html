@@ -253,463 +253,19 @@
             font-weight: 600;
             cursor: pointer;
             font-size: 1rem;
+            transition: opacity 0.3s;
         }
         
-        /* Responsive */
-        @media (max-width: 768px) {
-            th, td {
-                padding: 10px 5px;
-                font-size: 0.9rem;
-            }
-            
-            .header-content {
-                flex-direction: column;
-                gap: 15px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- Login Section (shown by default) -->
-    <div id="loginSection" class="login-container">
-        <h1 class="login-title">Benick Adventure Admin</h1>
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="email">Admin Email</label>
-                <input type="email" id="email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" required>
-            </div>
-            <button type="submit" class="login-btn">Login</button>
-        </form>
-    </div>
-
-    <!-- Admin Dashboard (hidden until login) -->
-    <div id="adminDashboard" style="display: none;">
-        <header class="admin-header">
-            <div class="container header-content">
-                <div class="logo">Benick Adventure</div>
-                <nav class="admin-nav">
-                    <a href="#" class="active">Dashboard</a>
-                    <a href="#">Bookings</a>
-                    <a href="#">Packages</a>
-                    <a href="#">Customers</a>
-                    <button class="logout-btn" id="logoutBtn">Logout</button>
-                </nav>
-            </div>
-        </header>
-
-        <main class="container">
-            <h1>Admin Dashboard</h1>
-            
-            <!-- Dashboard Cards -->
-            <div class="dashboard-cards">
-                <div class="card card-today">
-                    <div class="card-title">Today's Bookings</div>
-                    <div class="card-value" id="todayBookings">0</div>
-                </div>
-                <div class="card card-confirmed">
-                    <div class="card-title">Confirmed</div>
-                    <div class="card-value" id="confirmedBookings">0</div>
-                </div>
-                <div class="card card-pending">
-                    <div class="card-title">Pending</div>
-                    <div class="card-value" id="pendingBookings">0</div>
-                </div>
-                <div class="card card-cancelled">
-                    <div class="card-title">Cancelled</div>
-                    <div class="card-value" id="cancelledBookings">0</div>
-                </div>
-            </div>
-            
-            <!-- Recent Bookings Table -->
-            <h2>Recent Bookings</h2>
-            <div class="bookings-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Booking Ref</th>
-                            <th>Customer</th>
-                            <th>Package</th>
-                            <th>Date</th>
-                            <th>People</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bookingsTableBody">
-                        <!-- Bookings will be inserted here by JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-        </main>
-    </div>
-
-    <!-- Firebase and Admin Scripts -->
-    <script type="module">
-        // Import the functions you need from the Firebase SDKs
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-        import { 
-            getDatabase, 
-            ref, 
-            onValue, 
-            update,
-            query,
-            orderByChild,
-            equalTo,
-            get
-        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
-        import { 
-            getAuth, 
-            signInWithEmailAndPassword, 
-            signOut,
-            onAuthStateChanged
-        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDv7J33WTbJVpBEOajmS9AqfVHyV7wweNo",
-            authDomain: "benick-adventure.firebaseapp.com",
-            projectId: "benick-adventure",
-            storageBucket: "benick-adventure.appspot.com",
-            messagingSenderId: "236018156673",
-            appId: "1:236018156673:web:e8e35596c5a5674833b980",
-            measurementId: "G-3TJNZZ0JM6",
-            databaseURL: "https://benick-adventure-default-rtdb.firebaseio.com/"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const database = getDatabase(app);
-        
-        // DOM Elements
-        const loginSection = document.getElementById('loginSection');
-        const adminDashboard = document.getElementById('adminDashboard');
-        const loginForm = document.getElementById('loginForm');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const bookingsTableBody = document.getElementById('bookingsTableBody');
-        
-        // Check auth state
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // User is signed in
-                loginSection.style.display = 'none';
-                adminDashboard.style.display = 'block';
-                loadBookings();
-            } else {
-                // User is signed out
-                loginSection.style.display = 'block';
-                adminDashboard.style.display = 'none';
-            }
-        });
-        
-        // Login Form Submission
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    // Check if user is admin (you should implement proper admin verification)
-                    if (email.includes('@benickadventure.com')) {
-                        console.log('Admin logged in successfully');
-                    } else {
-                        // Not an admin, sign them out
-                        signOut(auth);
-                        alert('Only admin users can access this dashboard');
-                    }
-                })
-                .catch((error) => {
-                    alert('Login failed: ' + error.message);
-                });
-        });
-        
-        // Logout Button
-        logoutBtn.addEventListener('click', () => {
-            signOut(auth).then(() => {
-                console.log('Admin signed out');
-            }).catch((error) => {
-                console.error('Logout error:', error);
-            });
-        });
-        
-        // Load Bookings from Firebase
-        function loadBookings() {
-            const bookingsRef = ref(database, 'bookings');
-            const bookingsQuery = query(bookingsRef, orderByChild('bookingDate'));
-            
-            onValue(bookingsQuery, (snapshot) => {
-                const bookings = [];
-                let todayCount = 0;
-                let confirmedCount = 0;
-                let pendingCount = 0;
-                let cancelledCount = 0;
-                
-                const today = new Date().toISOString().split('T')[0];
-                
-                snapshot.forEach((childSnapshot) => {
-                    const booking = childSnapshot.val();
-                    booking.id = childSnapshot.key;
-                    bookings.uns<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Benick Adventure</title>
-    <style>
-        /* Global Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+        .login-btn:hover {
+            opacity: 0.9;
         }
         
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
-        
-        :root {
-            --primary: #FF7B54;
-            --secondary: #FF3D77;
-            --accent: #FF9A3E;
-            --dark: #1a1a2e;
-            --light: #f8f9fa;
-            --success: #4CAF50;
-            --warning: #FFC107;
-            --danger: #F44336;
-        }
-        
-        body {
-            color: #333;
-            line-height: 1.6;
-            background: #f5f5f5;
-        }
-        
-        .container {
-            width: 95%;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        /* Header */
-        .admin-header {
-            background: var(--dark);
-            color: white;
-            padding: 15px 0;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            background: linear-gradient(45deg, var(--accent), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .admin-nav {
-            display: flex;
-            gap: 20px;
-        }
-        
-        .admin-nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-        
-        .admin-nav a:hover {
-            color: var(--accent);
-        }
-        
-        .logout-btn {
-            background: var(--danger);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-        
-        /* Dashboard Cards */
-        .dashboard-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-        
-        .card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-        
-        .card-title {
-            font-size: 1rem;
-            color: #666;
-            margin-bottom: 10px;
-        }
-        
-        .card-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--dark);
-        }
-        
-        .card-today {
-            border-left: 5px solid var(--primary);
-        }
-        
-        .card-confirmed {
-            border-left: 5px solid var(--success);
-        }
-        
-        .card-pending {
-            border-left: 5px solid var(--warning);
-        }
-        
-        .card-cancelled {
-            border-left: 5px solid var(--danger);
-        }
-        
-        /* Bookings Table */
-        .bookings-table {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-            margin-bottom: 30px;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-        
-        th {
-            background: var(--dark);
-            color: white;
-            font-weight: 600;
-        }
-        
-        tr:hover {
-            background: #f9f9f9;
-        }
-        
-        .status {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        
-        .status-confirmed {
-            background: #e8f5e9;
-            color: var(--success);
-        }
-        
-        .status-pending {
-            background: #fff8e1;
-            color: var(--warning);
-        }
-        
-        .status-cancelled {
-            background: #ffebee;
+        /* Error Message */
+        .error-message {
             color: var(--danger);
-        }
-        
-        .action-btn {
-            padding: 5px 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
-            margin-right: 5px;
-        }
-        
-        .btn-edit {
-            background: var(--warning);
-            color: white;
-        }
-        
-        .btn-confirm {
-            background: var(--success);
-            color: white;
-        }
-        
-        .btn-cancel {
-            background: var(--danger);
-            color: white;
-        }
-        
-        /* Login Form */
-        .login-container {
-            max-width: 400px;
-            margin: 100px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-        
-        .login-title {
             text-align: center;
-            margin-bottom: 30px;
-            background: linear-gradient(45deg, var(--accent), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-size: 2rem;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
+            margin-top: 15px;
             font-weight: 600;
-        }
-        
-        .form-group input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-        
-        .login-btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 1rem;
         }
         
         /* Responsive */
@@ -740,6 +296,7 @@
                 <input type="password" id="password" required>
             </div>
             <button type="submit" class="login-btn">Login</button>
+            <div id="loginError" class="error-message" style="display: none;"></div>
         </form>
     </div>
 
@@ -815,9 +372,7 @@
             onValue, 
             update,
             query,
-            orderByChild,
-            equalTo,
-            get
+            orderByChild
         } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
         import { 
             getAuth, 
@@ -849,6 +404,13 @@
         const loginForm = document.getElementById('loginForm');
         const logoutBtn = document.getElementById('logoutBtn');
         const bookingsTableBody = document.getElementById('bookingsTableBody');
+        const loginError = document.getElementById('loginError');
+        
+        // Hardcoded Admin Credentials
+        const ADMIN_CREDENTIALS = {
+            email: 'admin@benickadventure.com',
+            password: 'admin@2025'
+        };
         
         // Check auth state
         onAuthStateChanged(auth, (user) => {
@@ -870,21 +432,43 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
-            signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    // Check if user is admin (you should implement proper admin verification)
-                    if (email.includes('@benickadventure.com')) {
-                        console.log('Admin logged in successfully');
-                    } else {
-                        // Not an admin, sign them out
-                        signOut(auth);
-                        alert('Only admin users can access this dashboard');
-                    }
+            // Show loading state
+            const loginBtn = loginForm.querySelector('.login-btn');
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Logging in...';
+            loginError.style.display = 'none';
+            
+            // First validate against hardcoded credentials
+            if (email !== ADMIN_CREDENTIALS.email || password !== ADMIN_CREDENTIALS.password) {
+                showLoginError('Invalid admin credentials');
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Login';
+                return;
+            }
+
+            // If credentials match, proceed with Firebase auth
+            signInWithEmailAndPassword(auth, ADMIN_CREDENTIALS.email, ADMIN_CREDENTIALS.password)
+                .then(() => {
+                    console.log('Admin logged in successfully');
+                    loginError.style.display = 'none';
                 })
                 .catch((error) => {
-                    alert('Login failed: ' + error.message);
+                    let errorMessage = 'Authentication failed';
+                    if (error.code === 'auth/too-many-requests') {
+                        errorMessage = 'Too many attempts. Try again later';
+                    }
+                    showLoginError(errorMessage);
+                })
+                .finally(() => {
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'Login';
                 });
         });
+        
+        function showLoginError(message) {
+            loginError.textContent = message;
+            loginError.style.display = 'block';
+        }
         
         // Logout Button
         logoutBtn.addEventListener('click', () => {
@@ -994,111 +578,6 @@
             
             document.querySelectorAll('.btn-edit').forEach(btn => {
                 btn.addEventListener('click', (e) => {
-                    // Implement edit functionality
-                    alert('Edit booking: ' + e.target.dataset.id);
-                });
-            });
-        }
-        
-        // Update Booking Status
-        function updateBookingStatus(bookingId, status) {
-            const bookingRef = ref(database, `bookings/${bookingId}`);
-            
-            update(bookingRef, {
-                status: status,
-                updatedAt: new Date().toISOString()
-            }).then(() => {
-                console.log('Booking status updated');
-            }).catch((error) => {
-                console.error('Error updating booking:', error);
-                alert('Failed to update booking status');
-            });
-        }
-    </script>
-</body>
-</html>hift(booking); // Add to beginning to show newest first
-                    
-                    // Update counters
-                    if (booking.bookingDate && booking.bookingDate.includes(today)) {
-                        todayCount++;
-                    }
-                    
-                    if (booking.status === 'confirmed') {
-                        confirmedCount++;
-                    } else if (booking.status === 'pending') {
-                        pendingCount++;
-                    } else if (booking.status === 'cancelled') {
-                        cancelledCount++;
-                    }
-                });
-                
-                // Update dashboard cards
-                document.getElementById('todayBookings').textContent = todayCount;
-                document.getElementById('confirmedBookings').textContent = confirmedCount;
-                document.getElementById('pendingBookings').textContent = pendingCount;
-                document.getElementById('cancelledBookings').textContent = cancelledCount;
-                
-                // Update bookings table
-                renderBookingsTable(bookings);
-            });
-        }
-        
-        // Render Bookings Table
-        function renderBookingsTable(bookings) {
-            bookingsTableBody.innerHTML = '';
-            
-            if (bookings.length === 0) {
-                bookingsTableBody.innerHTML = '<tr><td colspan="8" style="text-align: center;">No bookings found</td></tr>';
-                return;
-            }
-            
-            bookings.forEach(booking => {
-                const row = document.createElement('tr');
-                
-                // Format date
-                const travelDate = booking.travelDate ? new Date(booking.travelDate).toLocaleDateString() : 'Not set';
-                
-                // Status badge
-                let statusClass = 'status-pending';
-                if (booking.status === 'confirmed') statusClass = 'status-confirmed';
-                if (booking.status === 'cancelled') statusClass = 'status-cancelled';
-                
-                row.innerHTML = `
-                    <td>${booking.bookingRef || 'N/A'}</td>
-                    <td>${booking.fullName || 'N/A'}<br><small>${booking.email || ''}</small></td>
-                    <td>${booking.package || 'N/A'}</td>
-                    <td>${travelDate}</td>
-                    <td>${booking.numPeople || 1}</td>
-                    <td>KSh ${booking.totalAmount ? booking.totalAmount.toLocaleString() : '0'}</td>
-                    <td><span class="status ${statusClass}">${booking.status || 'pending'}</span></td>
-                    <td>
-                        ${booking.status !== 'confirmed' ? 
-                            `<button class="action-btn btn-confirm" data-id="${booking.id}">Confirm</button>` : ''}
-                        ${booking.status !== 'cancelled' ? 
-                            `<button class="action-btn btn-cancel" data-id="${booking.id}">Cancel</button>` : ''}
-                        <button class="action-btn btn-edit" data-id="${booking.id}">Edit</button>
-                    </td>
-                `;
-                
-                bookingsTableBody.appendChild(row);
-            });
-            
-            // Add event listeners to action buttons
-            document.querySelectorAll('.btn-confirm').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    updateBookingStatus(e.target.dataset.id, 'confirmed');
-                });
-            });
-            
-            document.querySelectorAll('.btn-cancel').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    updateBookingStatus(e.target.dataset.id, 'cancelled');
-                });
-            });
-            
-            document.querySelectorAll('.btn-edit').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    // Implement edit functionality
                     alert('Edit booking: ' + e.target.dataset.id);
                 });
             });
