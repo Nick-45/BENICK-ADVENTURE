@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beach Holidays | Benick Adventure Kenya</title>
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Same styles as tours.html */
+        :root {
+            --primary: #FF7B54;
+            --secondary: #FF3D77;
+            --accent: #FF9A3E;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            color: #333;
+            line-height: 1.6;
+            background: #f5f5f5;
+        }
+        
+        /* Header Styles */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            height: 60vh;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: white;
+            margin-top: 80px;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Packages Section */
+        .packages-container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+        
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .package-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .package-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .package-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        
+        .package-info {
+            padding: 1.5rem;
+        }
+        
+        .package-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+        
+        .package-location {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .package-desc {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+        
+        .package-features {
+            margin: 1.5rem 0;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+        }
+        
+        .feature-item i {
+            color: var(--primary);
+            margin-right: 0.8rem;
+            width: 20px;
+        }
+        
+        .package-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+        }
+        
+        .package-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255,59,119,0.3);
+        }
+        
+        /* Footer - Same as tours.html */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 4rem 0 2rem;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-col h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.8rem;
+        }
+        
+        .footer-col h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--primary);
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: #ddd;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: white;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 2rem;
+                transition: left 0.3s;
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .packages-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header same as tours.html -->
+    <header>
+        <nav class="navbar">
+            <a href="index.html" class="logo">Benick Adventure</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="tours.html">Safari Packages</a></li>
+                <li><a href="roadtrips.html">Road Trips</a></li>
+                <li><a href="vacations.html" class="active">Beach Holidays</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Kenyan Beach Getaways</h1>
+            <p>Relax on pristine white sand beaches and experience coastal Kenya's rich culture</p>
+        </div>
+    </section>
+
+    <!-- Packages Section -->
+    <section class="packages-container">
+        <div class="section-title">
+            <h2>Beach Holiday Packages</h2>
+            <p>Unwind at Kenya's most beautiful coastal destinations</p>
+        </div>
+        
+        <div class="packages-grid">
+            <!-- Package 1 -->
+            <div class="package-card">
+                <img src="https://images.unsplash.com/photo-1523800503107-5bc3ba2a6f81?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
+                     alt="Diani Beach" class="package-img">
+                <div class="package-info">
+                    <h3 class="package-title">Diani Beach Retreat</h3>
+                    <div class="package-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Diani Beach, South Coast</span>
+                    </div>
+                    <p class="package-desc">
+                        A 5-star beachfront resort experience on Kenya's most famous beach, with water sports and spa treatments.
+                    </p>
+                    
+                    <div class="package-features">
+                        <div class="feature-item">
+                            <i class="fas fa-calendar-days"></i>
+                            <span>5 Days / 4 Nights</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-umbrella-beach"></i>
+                            <span>Beachfront Villa</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-utensils"></i>
+                            <span>All-Inclusive Dining</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-water"></i>
+                            <span>Water Sports Included</span>
+                        </div>
+                    </div>
+                    
+                    <div class="package-footer">
+                        <div class="package-price">KSh 65,000</div>
+                        <a href="booking.html?package=diani" class="btn">Book Now</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Package 2 -->
+            <div class="package-card">
+                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
+                     alt="Watamu Beach" class="package-img">
+                <div class="package-info">
+                    <h3 class="package-title">Watamu Marine Paradise</h3>
+                    <div class="package-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Watamu, North Coast</span>
+                    </div>
+                    <p class="package-desc">
+                        Experience the marine wonderland of Watamu with snorkeling, dolphin watching, and relaxing on pristine beaches.
+                    </p>
+                    
+                    <div class="package-features">
+                        <div class="feature-item">
+                            <i class="fas fa-calendar-days"></i>
+                            <span>4 Days / 3 Nights</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-fish"></i>
+                            <span>Marine Park Visits</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-swimming-pool"></i>
+                            <span>Infinity Pool</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-ship"></i>
+                            <span>Boat Excursions</span>
+                        </div>
+                    </div>
+                    
+                    <div class="package-footer">
+                        <div class="package-price">KSh 55,000</div>
+                        <a href="booking.html?package=watamu" class="btn">Book Now</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Package 3 -->
+            <div class="package-card">
+                <img src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" 
+                     alt="Lamu Island" class="package-img">
+                <div class="package-info">
+                    <h3 class="package-title">Lamu Cultural Escape</h3>
+                    <div class="package-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Lamu Archipelago</span>
+                    </div>
+                    <p class="package-desc">
+                        Immerse yourself in Swahili culture on this 7-day journey through Lamu's ancient streets and secluded beaches.
+                    </p>
+                    
+                    <div class="package-features">
+                        <div class="feature-item">
+                            <i class="fas fa-calendar-days"></i>
+                            <span>7 Days / 6 Nights</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-monument"></i>
+                            <span>Cultural Tours</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-dhow"></i>
+                            <span>Dhow Sailing</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-home"></i>
+                            <span>Boutique Swahili House</span>
+                        </div>
+                    </div>
+                    
+                    <div class="package-footer">
+                        <div class="package-price">KSh 75,000</div>
+                        <a href="booking.html?package=lamu" class="btn">Book Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+   <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>Benick Adventure</h3>
+                <p>Creating unforgettable Kenyan road trip experiences since 2023.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="tours.html">Safari Packages</a></li>
+                    <li><a href="roadtrips.html">Road Trips</a></li>
+                    <li><a href="vacations.html">Beach Holidays</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Support</h3>
+                <ul class="footer-links">
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Terms & Conditions</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3>Contact Info</h3>
+                <ul class="footer-links">
+                    <li><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</li>
+                    <li><i class="fas fa-phone"></i> +254 700 123456</li>
+                    <li><i class="fas fa-envelope"></i> info@benickadventure.com</li>
+                    <li><i class="fas fa-clock"></i> Mon-Fri: 8AM - 5PM</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2025 Benick Adventure. All rights reserved.</p>
+        </div>
+    </footer>
+    <script>
+        // Mobile Menu Toggle
+        const mobileBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        
+        mobileBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            mobileBtn.innerHTML = navLinks.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+        
+        // Sticky Header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            header.classList.toggle('sticky', window.scrollY > 0);
+        });
+    </script>
+</body>
+</html>
